@@ -9,3 +9,7 @@ def home():
 @path.route('/admin')
 def admin():
     return "Hello Admin!"
+
+@path.route('/<username>')
+def user(username):
+    return f"Hello { username }!"
