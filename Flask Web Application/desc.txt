@@ -1,0 +1,15 @@
+This file contains an explanation of the app, its intended purpose, and work history. 
+
+Idea: Create a simple local website that acts as a portal for medical patients. 
+There's three types of users: 
+  - patients, with access to their own info,
+  - doctors, with access to their patients' info and possible access to others,
+  - admins, with access to all info and handles permission granting
+
+Tools: Flask (Python) back-end API, HTML and CSS for website content and formatting (possibly Javascript front-end later)
+
+This is intended as a "learning project" to help me get used to web development using other frameworks besides depending on HTML and CSS.
+
+-----------------------------------HISTORY------------------------------------------
+10/17/2023 - Used boilerplate HTML and CSS templates to structure an example Pandas DataFrame table
+
