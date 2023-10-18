@@ -13,3 +13,4 @@ This is intended as a "learning project" to help me get used to web development 
 -----------------------------------HISTORY------------------------------------------
 10/17/2023 - Used boilerplate HTML and CSS templates to structure an example Pandas DataFrame table
 
+10/15/2023 - Tried Flask for the first time, created app file, made example routes, used Blueprint to create and import a file to hold routes
