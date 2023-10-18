@@ -1,0 +1,15 @@
+table.dataframe {
+    font-family: Arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.dataframe th, table.dataframe td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+table.dataframe tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
