@@ -5,7 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+    h1 {
+        text-align: center;
+        font-size: 72px;
+    }
+</style>
 <body>
-    Hello World!
+    <h1>
+    Welcome {{ greeted | safe}}
+    </h1>
+    <h2>
+        {% if homepage %}
+        <form action="#" method="post">
+            <p><input type="submit" value="Login"></p>
+        </form>
+     {% endif %}
+    </h2>
 </body>
 </html>

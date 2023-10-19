@@ -1,11 +1,14 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for
 import pandas as pd
 
 path = Blueprint('routes', __name__)
 
-@path.route('/')
+@path.route('/', methods = ['GET', 'POST'])
 def home():
-    return render_template('index.html')
+    if request.method == 'POST':
+        return redirect(url_for('routes.login'))
+    else:
+        return render_template('index.html', greeted = "to nafizzl's medical database.", homepage = True)
 
 @path.route('/admin')
 def admin():
@@ -20,4 +23,14 @@ def admin():
 
 @path.route('/<username>')
 def user(username):
-    return f"Hello { username }!"
+    return render_template('index.html', greeted = username,  homepage = False)
+
+@path.route('/login', methods = ['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        user = request.form['username']
+        if user.lower() == 'admin':
+            return redirect(url_for("routes.admin"))
+        return redirect(url_for("routes.user", username = user))
+    else:
+        return render_template('login.html')

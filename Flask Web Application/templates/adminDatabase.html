@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="tableStyle.css">
 </head>
+<style>
+    h1 {
+        text-align: center;
+        font-size: 72px;
+    }
+</style>
 <body>
+    <h1>Welcome Admin</h1>
     <table class = "dataframe">
     {{ table | safe}}
     </table>

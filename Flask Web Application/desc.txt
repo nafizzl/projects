@@ -11,6 +11,8 @@ Tools: Flask (Python) back-end API, HTML and CSS for website content and formatt
 This is intended as a "learning project" to help me get used to web development using other frameworks besides depending on HTML and CSS.
 
 -----------------------------------HISTORY------------------------------------------
+10/18/2023 - Imported redirect, url_for, and request. Made simple login page, collected data using HTTP post methods, made some redirect changes depending on what user does 
+
 10/17/2023 - Used boilerplate HTML and CSS templates to structure an example Pandas DataFrame table
 
 10/15/2023 - Tried Flask for the first time, created app file, made example routes, used Blueprint to create and import a file to hold routes
