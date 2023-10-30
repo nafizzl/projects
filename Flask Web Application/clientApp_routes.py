@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for
-import pandas as pd
+from flask import Blueprint, render_template, request, redirect, url_for, sessions
+from medInfo import medInfo
 
 path = Blueprint('routes', __name__)
 
@@ -8,29 +8,39 @@ def home():
     if request.method == 'POST':
         return redirect(url_for('routes.login'))
     else:
-        return render_template('index.html', greeted = "to nafizzl's medical database.", homepage = True)
+        return render_template('welcome.html', greeted = "to nafizzl's medical database.", homepage = True, returnHome = False)
 
-@path.route('/admin')
+@path.route('/admin', methods = ['GET', 'POST'])
 def admin():
-    data = {
-        "Name": ["Mark Aguire", "Pat Riley", "Phil Jackson"],
-        "Age": [58, 65, 60],
-        "ID": [11235, 45947, 43673]
-    }
-    df = pd.DataFrame(data)
-    df_html = df.to_html()
-    return render_template('adminDatabase.html', table = df_html)
+    if request.method == "POST":
+        if request.form.get('adminAction') == "Add New Group":
+            return "Added new group"
+        else:
+            return "Viewed all users"
+    else:
+        return render_template('admin.html', actionsPage = True)
 
-@path.route('/<username>')
+# @path.route('/admin')
+# def addCollection():
+    
+
+@path.route('/<username>', methods = ['POST', 'GET'])
 def user(username):
-    return render_template('index.html', greeted = username,  homepage = False)
+    if request.method == "POST":
+        return redirect(url_for('routes.home'))
+    return render_template('welcome.html', greeted = username,  homepage = False, returnHome = True)
 
 @path.route('/login', methods = ['POST', 'GET'])
 def login():
     if request.method == 'POST':
         user = request.form['username']
-        if user.lower() == 'admin':
+        password = request.form['password']
+        if user.lower() == 'admin' and password.lower() == 'admin':
             return redirect(url_for("routes.admin"))
-        return redirect(url_for("routes.user", username = user))
+        elif password.lower() == 'password':
+            return redirect(url_for("routes.user", username = user))
+        else:
+            return render_template('login.html', loginFailed = True)
     else:
-        return render_template('login.html')
+        return render_template('login.html', loginFailed = False)
+        

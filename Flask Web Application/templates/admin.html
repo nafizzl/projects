@@ -13,9 +13,12 @@
     }
 </style>
 <body>
-    <h1>Welcome Admin</h1>
-    <table class = "dataframe">
-    {{ table | safe}}
-    </table>
+    <h1>Welcome Administrator</h1>
+    {% if actionsPage %}
+    <form action="#" method="post">
+        <p><input type="submit" name="adminAction" value="Add New Group"></p>
+        <p><input type="submit" name="adminAction" value="View All Users"></p>
+    </form>
+    {% endif %}
 </body>
 </html>
