@@ -1,3 +1,3 @@
 from flask_pymongo import PyMongo
-
-medInfo = PyMongo()                         # make database here to avoid circular imports
+#from clientApp import clientApp
+pymongo = PyMongo()                         # make database here to avoid circular imports

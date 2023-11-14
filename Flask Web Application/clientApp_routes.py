@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, sessions
-from medInfo import medInfo
+from medInfo import pymongo
 
 path = Blueprint('routes', __name__)
 
@@ -37,7 +37,7 @@ def login():
         password = request.form['password']
         if user.lower() == 'admin' and password.lower() == 'admin':
             return redirect(url_for("routes.admin"))
-        elif password.lower() == 'password':
+        if pymongo.medInfoDB.Patients.find_one({'username': user.lower(), 'password': password}):
             return redirect(url_for("routes.user", username = user))
         else:
             return render_template('login.html', loginFailed = True)
