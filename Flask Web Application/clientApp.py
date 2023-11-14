@@ -13,28 +13,30 @@ try:
 except Exception as e:
     print(f"Failed to connect to MongoDB: {e}")
 
-# @clientApp.before_first_request
-# def checkDB():
-#     try:
-#         local = mongo.db
-#         localName = local.name  # Get the database name
+with clientApp.app_context():
+    try:
+        local = mongo.db
+        localName = local.name  # Get the database name
 
-#         # Check if the database exists on the local server
-#         if localName not in local.client.list_database_names():
-#             # Database doesn't exist on the local server, so create it
+        # Check if the database exists on the local server
+        if localName not in local.client.list_database_names():
+            # Database doesn't exist on the local server, so create it
     
-#             print(f"Database '{localName}' does not exist. Creating...")
+            print(f"Database '{localName}' does not exist. Creating...")
 
-#             # Copy data from included json files
-#             with open(r"C:\Users\19295\projects\Flask Web Application\medInfoDB.Patients.json", "r") as json_file1:
-#                 data = json.load(json_file1)
-#                 local.Patients.insert_many(data)
+            # Copy data from included json files
+            with open(r"C:\Users\19295\projects\Flask Web Application\medInfoDB.Patients.json", "r") as json_file1:
+                data = json.load(json_file1)
+                local.Patients.insert_many(data)
             
-#             print(f"Database '{localName}' created.")
+            print(f"Database '{localName}' created.")
+        
+        else:
+            print("Database already exists.")
 
-#     except PyMongo.errors.ServerSelectionTimeoutError:
-#         # Handle connection errors (e.g., the local server is not reachable)
-#         print("Failed to connect to the local MongoDB server")
+    except PyMongo.errors.ServerSelectionTimeoutError:
+        # Handle connection errors (e.g., the local server is not reachable)
+        print("Failed to connect to the local MongoDB server")
 
 path = Blueprint('routes', __name__)
 
