@@ -65,7 +65,10 @@ def admin():
 def user(username):
     if request.method == "POST":
         return redirect(url_for('routes.home'))
-    return render_template('welcome.html', greeted = username,  homepage = False, returnHome = True)
+    doc = request.args.get('doc')
+    con = request.args.get('con')
+    det = request.args.get('det')
+    return render_template('welcome.html', greeted = username,  homepage = False, returnHome = True, doctor = doc, condition = con, details = det)
 
 @path.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -78,7 +81,7 @@ def login():
         user_data = mongo.db.Patients.find_one({'Username': user})
 
         if user_data and user_data['Password'] == password:
-            return redirect(url_for("routes.user", username=user))
+            return redirect(url_for("routes.user", username=user_data['Name'], doc=user_data['Doctor'], con=user_data['Condition'], det=user_data['Details']))
         else:
             print(f"Login failed for username: {user}")
             return render_template('login.html', loginFailed=True)

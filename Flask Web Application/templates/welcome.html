@@ -22,6 +22,24 @@
         </form>
         {% endif %}
         {% if returnHome %}
+        <div>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <td>Doctor</td>
+                        <td>Condition</td>
+                        <td>Details</td>
+                    </tr>
+                </thead>
+                <tbody style="font-size: small;">
+                    <tr>
+                        <td>{{ doctor | safe}}</td>
+                        <td>{{ condition | safe}}</td>
+                        <td>{{ details | safe}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <form action="#" method="post">
             <p><input type="submit" value="Return Home"></p>
         </form>
