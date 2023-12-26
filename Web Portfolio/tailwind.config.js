@@ -14,9 +14,9 @@ module.exports = {
         neonRed: '#ff0000',
         neonTeal: '#00ffcc',
         neonLime: '#bfff00',
-      }
+        hackerGreen: '#00ff00'
+      },
     },
   },
   plugins: [],
 }
-
