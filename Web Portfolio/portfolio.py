@@ -10,9 +10,23 @@ def links():
             return redirect(url_for("home"))
         elif buttonName == "Links":
             return render_template("links.html") 
+        elif buttonName == "Projects":
+            return redirect(url_for("projects"))
     return render_template('links.html')
 
-@pf.route('/', methods=["GET", "POST"])
+@pf.route('/projects', methods=["GET", "POST"])
+def projects():
+    if request.method == "POST":
+        buttonName = request.form.get("pfPage")
+        if buttonName == "Home":
+            return redirect(url_for("home"))
+        elif buttonName == "Links":
+            return redirect(url_for("links"))
+        elif buttonName == "Projects":
+            return render_template("projects.html") 
+    return render_template('projects.html')
+
+@pf.route('/home', methods=["GET", "POST"])
 def home():
     if request.method == "POST":
         buttonName = request.form.get("pfPage")
@@ -20,7 +34,13 @@ def home():
             return render_template("homepage.html")
         elif buttonName == "Links":
             return redirect(url_for("links")) 
+        elif buttonName == "Projects":
+            return redirect(url_for("projects"))
     return render_template('homepage.html')
+
+@pf.route('/')
+def website():
+    return redirect(url_for("home"))
 
 if __name__ == '__main__':
     pf.run(debug=True)
