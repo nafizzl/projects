@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, url_for, request, redirect
 
 pf = Flask(__name__)
@@ -43,4 +44,4 @@ def website():
     return redirect(url_for("home"))
 
 if __name__ == '__main__':
-    pf.run(debug=True)
+    pf.run(debug=True, host="0.0.0.0", port = int(os.environ.get('PORT', 8080)))
