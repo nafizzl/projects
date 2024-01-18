@@ -1,15 +1,17 @@
 # Steps for making a neural network model and training it:
 #     1. Import all necessary packages and dependencies from your ML framework (PyTorch in this case)
-#     2. Get the data and set training size
+#     2. Get the data and set training size (batch)
 #     3. Make the neural network
 #     4. Create instances of your neural network and additional tools like an optimizer and loss 
 #     5. Engage your neural network in a training loop
+#           a. Calculate the losses in each training cycle
+#           b. Use them to adjust and optimize your model for better results
 #     6. Observe the outputs your model delivers and carry out any necessary changes
 
 
 # imports for beginner MNIST training using PyTorch
 import torch                                            # get the full package to use things like assigning computation platform
-from torch import nn                                    # neural network package, contains helpful classes
+from torch import nn, load, save                                    # neural network package, contains helpful classes
 from torch.optim import Adam                            # optimization algorithm efficient in training
 from torch.utils.data import DataLoader                 # tool to help load data from a dataset and do various actions
 from torchvision import datasets                        # package of datasets ready for use (DataSets in util.data is an alternative)
@@ -70,9 +72,21 @@ findLoss = nn.CrossEntropyLoss()
 
 if __name__ == "__main__":
     for epoch in range(10):                             # train model for 10 epochs, or 10 full run-throughs of the entire database 
-        for batch in trainingDataset:
-            x,y = batch
-            x,y = x.to(device),y.to(device)
-            yhat = trainer(x)
-            loss = findLoss(yhat, y) 
+        for batch in trainingDataset:                   # We use the DataLoader instance rather than the MNIST dataset itself
+            x,y = batch                                 # Get the batch for model to work with (x is image, y is label)
+            x,y = x.to(device),y.to(device)             # Send your data to device, whether CPU or GPU 
+            yhat = trainer(x)                           # Get the result from the neural network
+            loss = findLoss(yhat, y)                    # Compute the difference between the neural network's output and the real output
             
+            # Take the previous results and start optimizing and "upgrading" your model to later output accurate results
+            # First apply the gradient function to your optimizer results to determine how your model should improve
+            optimizer.zero_grad()
+            # Next, apply backpropagation calculations using the loss function
+            loss.backward()
+            # Increment the optimizer's step and 
+            optimizer.step()
+
+        print(f"Epoch {epoch} loss: {loss.item()}")     # This line just prints the loss calcualted in each epoch, or full dataset cycle
+    
+    with open("nafizModel.pt", "wb") as f:              # This creates a PyTorch file that saves important information like losses and gradients
+        save(trainer.state_dict(), f)                   # The model will directly record results using this function
