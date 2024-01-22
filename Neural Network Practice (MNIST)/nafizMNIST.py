@@ -11,11 +11,13 @@
 
 # imports for beginner MNIST training using PyTorch
 import torch                                            # get the full package to use things like assigning computation platform
-from torch import nn, load, save                                    # neural network package, contains helpful classes
+from PIL import Image                                   # get the ability to load images and have the trainer anyalyze and conclude on them
+from torch import nn, load, save                        # neural network package, contains helpful classes
 from torch.optim import Adam                            # optimization algorithm efficient in training
 from torch.utils.data import DataLoader                 # tool to help load data from a dataset and do various actions
 from torchvision import datasets                        # package of datasets ready for use (DataSets in util.data is an alternative)
 from torchvision.transforms import ToTensor             # convert data to tensors processable by PyTorch
+import time                                             # This is for adding sensible delays to terminal messages
 
 # get data from dataset package, set its root, tell PyTorch to download, train, and convert data to a tensor for processing
 trainingData = datasets.MNIST(
@@ -71,22 +73,62 @@ optimizer = Adam(trainer.parameters(), lr=1e-3)
 findLoss = nn.CrossEntropyLoss()
 
 if __name__ == "__main__":
-    for epoch in range(10):                             # train model for 10 epochs, or 10 full run-throughs of the entire database 
-        for batch in trainingDataset:                   # We use the DataLoader instance rather than the MNIST dataset itself
-            x,y = batch                                 # Get the batch for model to work with (x is image, y is label)
-            x,y = x.to(device),y.to(device)             # Send your data to device, whether CPU or GPU 
-            yhat = trainer(x)                           # Get the result from the neural network
-            loss = findLoss(yhat, y)                    # Compute the difference between the neural network's output and the real output
-            
-            # Take the previous results and start optimizing and "upgrading" your model to later output accurate results
-            # First apply the gradient function to your optimizer results to determine how your model should improve
-            optimizer.zero_grad()
-            # Next, apply backpropagation calculations using the loss function
-            loss.backward()
-            # Increment the optimizer's step and 
-            optimizer.step()
+    choice = -1
+    print("Welcome to nafizzl's MNIST training model.")
+    while choice != 1 and choice != 2:
+        time.sleep(2)
+        print("Press 1 to train the model and get a PyTorch file.")
+        time.sleep(2)
+        print("Press 2 to view the results of a trained model.")
+        time.sleep(2)
+        choice = int(input("Enter your choice: "))
+        if choice == 1:
+            for epoch in range(10):                             # train model for 10 epochs, or 10 full run-throughs of the entire database 
+                for batch in trainingDataset:                   # We use the DataLoader instance rather than the MNIST dataset itself
+                    x,y = batch                                 # Get the batch for model to work with (x is image, y is label)
+                    x,y = x.to(device),y.to(device)             # Send your data to device, whether CPU or GPU 
+                    yhat = trainer(x)                           # Get the result from the neural network
+                    loss = findLoss(yhat, y)                    # Compute the difference between the neural network's output and the real output
+                    
+                    # Take the previous results and start optimizing and "upgrading" your model to later output accurate results
+                    # First apply the gradient function to your optimizer results to determine how your model should improve
+                    optimizer.zero_grad()
+                    # Next, apply backpropagation calculations using the loss function
+                    loss.backward()
+                    # Increment the optimizer's step and 
+                    optimizer.step()
 
-        print(f"Epoch {epoch} loss: {loss.item()}")     # This line just prints the loss calcualted in each epoch, or full dataset cycle
-    
-    with open("nafizModel.pt", "wb") as f:              # This creates a PyTorch file that saves important information like losses and gradients
-        save(trainer.state_dict(), f)                   # The model will directly record results using this function
+                print(f"Epoch {epoch} loss: {loss.item()}")     # This line just prints the loss calcualted in each epoch, or full dataset cycle
+            
+            with open("nafizModel.pt", "wb") as f:              # This creates a PyTorch file that saves important information like losses and gradients
+                save(trainer.state_dict(), f)                   # The model will directly record results using this function
+            
+        elif choice == 2:
+            with open("nafizModel.pt", "rb") as f:              # open up the PyTorch file which contains training data
+                trainer.load_state_dict(load(f))                # tell the model to load its contents
+            
+            # Let the user select any random image out of the 60000 available
+            index = int(input("Enter the index of the image to predict (0-59999): ")) 
+            image, label = trainingData[index]
+
+            time.sleep(2)
+            print(f"Label: {label}")                            # Take note of the actual label
+
+            image = image.unsqueeze(0).to(device)               # Unsqueeze adds a dimension to the tensor (used for single inputs when the model expects a batch)
+
+            # The no_grad method is used to make the model only evaluate and not update its learning parameters
+            with torch.no_grad():
+            # The argmax methods looks for which class has the highest probability of being true and returns that number as an output with the help of the item method
+                prediction = torch.argmax(trainer(image)).item()
+
+            time.sleep(2)
+            print(f"Prediction: {prediction}")
+
+            time.sleep(2)
+            if label == prediction:
+                print("The trained model delivered the correct answer.")
+            else:
+                print("The trained model did not deliver the correct answer.")    
+        else:
+            print("Invalid number, please try again.")
+            time.sleep(2)
