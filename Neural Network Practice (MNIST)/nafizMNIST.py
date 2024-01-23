@@ -40,7 +40,7 @@ trainingDataset = DataLoader(trainingData, 32)
 # create neural network using a base class in the nn package, Module 
 class numberClassifier(nn.Module):
     def __init__(self):                                 # initialize the layers of our neural network using components from nn package
-        super().__init__()
+        super().__init__()                              # invoke the super constructor of parent, allowing for correct initialization of a functional PyTorch neural network
         self.model = nn.Sequential(
             # nn's 2D convolutional layer method, which defines a neural network's layer's input channels, output channels, and size of kernels (matrices) 
             nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3),        
