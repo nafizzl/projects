@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MNIST Trainer Home</title>
+    <link href="{{url_for('static', filename="../static/css/main.css")}}" rel="stylesheet">
+</head>
+<body>
+    <div class="flex-auto">
+        <h1 class="text-black text-4xl font-mono font-bold text-center">Welcome to nafizzl's MNIST trainer!</h1>  
+    </div>
+    <div class="flex-auto items-center">
+        <form action="/" method="post">
+            <button value="Train" name="button" class="bg-gray-700">Train</button>
+            <button value="Test" name="button" class="bg-gray-700">Test</button>
+        </form>
+    </div>
+</body>
+</html>
+
