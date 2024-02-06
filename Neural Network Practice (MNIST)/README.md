@@ -1,1 +1,0 @@
-This is my project on my first ML project. It involves using the MNIST database for analysis and the PyTorch framework to create a reliable model which can accurately distinguish handwritten numbers. Helpful comments are written for my own, and possibly others', understanding. 
