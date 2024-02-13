@@ -1,0 +1,4 @@
+
+
+February 12, 2024 - Started work on v.1.0 of my SAT Practice Test application. Started Flask web application,
+connected to MySQL database, started forming proper tables.  

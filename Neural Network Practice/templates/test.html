@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Network</title>
+    <link href="{{url_for('static', filename="../static/css/main.css")}}" rel="stylesheet">
 </head>
 <body>
-    
+    <div class="flex-auto">
+        <h1 class="text-black text-4xl font-mono font-bold text-center">Test the network here!</h1>  
+    </div>
+    <div class="flex-auto items-center">
+        <form action="/test" method="post">
+            <button value="Train" name="button" class="bg-gray-700">Train</button>
+            <button value="Home" name="button" class="bg-gray-700">Home</button>
+        </form>
+    </div>
 </body>
 </html>

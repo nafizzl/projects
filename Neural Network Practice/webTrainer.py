@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 import torch                                            
 from PIL import Image                                   
@@ -15,18 +15,32 @@ webTrainer = Flask(__name__)
 def home():
     if request.method == "POST":
         if request.form['button'] == "Test":
-            return render_template("test.html")
+            return redirect(url_for("test"))
         elif request.form['button'] == "Train":
-            return render_template("train.html")
+            return redirect(url_for("train"))
     else:
         return render_template("home.html")
 
-@webTrainer.route("/train")
+@webTrainer.route("/train", methods=["GET", "POST"])
 def train():
-    return render_template("train.html")
-
-@webTrainer.route("/test")
+    if request.method == "POST":
+        if request.form['button'] == "Test":
+            return redirect(url_for("test"))
+        elif request.form['button'] == "Home":
+            print("home")
+            return redirect(url_for("home"))
+    else:
+        return render_template("train.html")
+    
+@webTrainer.route("/test", methods=["GET", "POST"])
 def test():
-    return render_template("test.html")
+    if request.method == "POST":
+        if request.form['button'] == "Train":
+            return redirect(url_for("train"))
+        elif request.form['button'] == "Home":
+            return redirect(url_for("home"))
+    else:
+        return render_template("test.html")
+
 if __name__ == "__main__":
     webTrainer.run(debug=True)
