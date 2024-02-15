@@ -1,4 +1,8 @@
+Februaru 14, 2024 - Created more necessary html files, included and started working with Werkzeug's security
+features (password hashing)
 
+February 13, 2024 - Added .env and .gitignore for necessary security purposes, added check statements for user
+and practice problems statements.
 
 February 12, 2024 - Started work on v.1.0 of my SAT Practice Test application. Started Flask web application,
 connected to MySQL database, started forming proper tables.  
