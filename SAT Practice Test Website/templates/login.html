@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
 </head>
 <body>
-    
+    <form action="/login" method="POST">
+        <p>Username</p>
+        <input type="text">
+        <p>Password</p>
+        <input type="password">
+        <p></p>
+        <button type="submit">submit</button>
+    </form>
+    {% if fail %}
+        <h1 class="text-center text-4xl">Error logging in, invalid username or password.</h1>
+    {% endif %}
 </body>
 </html>

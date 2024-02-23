@@ -1,4 +1,10 @@
-Februaru 14, 2024 - Created more necessary html files, included and started working with Werkzeug's security
+February 22, 2024 - *Long break due to schoolwork and tests* Fixed MySQL database connection issues, fixed MySQL
+statements with parameters to prevent MySQL injection, tested login page with Jinga templating and tested MySQL
+login attempt using fetch
+
+February 15, 2024 - Used bcrypt hashing, worked on signup page
+
+February 14, 2024 - Created more necessary html files, included and started working with Werkzeug's security
 features (password hashing)
 
 February 13, 2024 - Added .env and .gitignore for necessary security purposes, added check statements for user

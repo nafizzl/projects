@@ -10,6 +10,11 @@ labib_corp = Flask(__name__)
 # home page route
 @labib_corp.route("/", methods=["GET", "POST"])                                                  
 def home():
+    if request.method == "POST":
+        if request.form.get("login"):
+            return redirect(url_for("login"))
+        if request.form.get("signup"):
+            return redirect(url_for("signup"))
     return render_template("home.html")
 
 # login page route
@@ -20,25 +25,46 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        check = c.execute("SELECT * FROM SAT_USERS WHERE USERNAME = %s", (username,), fetch_one=True)
+        c.execute("SELECT * FROM SAT_USERS WHERE USERNAME = %s", (username,))
+        check = c.fetchone()
     
         # if the database returns None, the username/password combination is an invalid one
         if check and check_password_hash(check["password"], password):
             session["username"] = username
-            return redirect(url_for("user"))
-        
+            return redirect(url_for("user")) 
         else:
-            return redirect(url_for("login"))
+            return render_template("login.html", fail=True) 
     else:
-        return render_template("signup.html")
+        return render_template("login.html", fail=False)
+
+# signup page route
 @labib_corp.route("/signup", methods=["GET", "POST"])
 def signup():
+    # use request
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
 
+        check = c.execute("SELECT * FROM SAT_USERS WHERE USERNAME = %s", (username,), fetch_one=True)
+
+        # if the database returns None, this new user info can be used
+
+        if check:
+            return redirect(url_for("signup"))
+        else:
+            hashed = generate_password_hash(password, method="bcrypt")
+            c.execute("INSERT INTO SAT_USERS(USERNAME, PASSWORD) VALUES (%s, %s)", (username, hashed))
+            session["username"] = username
+            return redirect(url_for("user"))
+    else:
+        return render_template("signup.html")
 # @labib_corp.route("/user", methods=["GET", "POST"])
 
 # @labib_corp.route("/problems", methods=["GET", "POST"])
 
 if __name__ == "__main__":   
+    nafiz_company = None
+    
     try: 
         # load credentials
         load_dotenv()                                                       
@@ -46,8 +72,9 @@ if __name__ == "__main__":
         # connect using credentials hidden in .env
         nafiz_company = pymysql.connect(                                    
         host = os.getenv("HOST"),
-        user = os.getenv("USERNAME"),
-        password = os.getenv("PASSWORD")
+        user = os.getenv("USER"),
+        password = os.getenv("PASSWORD"),
+        database = "sat"
     )
         # create executable cursor
         c = nafiz_company.cursor()                                          
@@ -63,7 +90,7 @@ if __name__ == "__main__":
         
         # make the users table if it hasn't been done yet, with relevant columns 
         if not table_exists(c, "SAT_USERS"):
-            c.execute("CREATE TABLE SAT_USERS(id INT PRIMARY KEY, USERNAME VARCHAR(50), PASSWORD VARCHAR(50), FIRST_NAME VARCHAR(50), LAST_NAME VARCHAR(50))")
+            c.execute("CREATE TABLE SAT_USERS(id INT PRIMARY KEY, USERNAME VARCHAR(50), PASSWORD VARCHAR(255), FIRST_NAME VARCHAR(50), LAST_NAME VARCHAR(50))")
 
         # run Flask app
         labib_corp.run(debug=True)                                          
@@ -76,3 +103,5 @@ if __name__ == "__main__":
     finally:
         if nafiz_company:
             nafiz_company.close()
+        if c:
+            c.close()
