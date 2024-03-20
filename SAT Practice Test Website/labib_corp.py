@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from dotenv import load_dotenv
-from werkzeug.security import generate_password_hash, check_password_hash
+import bcrypt
 import os
 import pymysql
+import uuid
 
 # flask app instance
 labib_corp = Flask(__name__)                                            
+load_dotenv()
+labib_corp.secret_key = os.getenv("SECRET_KEY")
 
 # home page route
 @labib_corp.route("/", methods=["GET", "POST"])                                                  
@@ -25,13 +28,13 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        c.execute("SELECT * FROM SAT_USERS WHERE USERNAME = %s", (username,))
+        c.execute("SELECT * FROM sat_users WHERE USERNAME = %s", (username,))
         check = c.fetchone()
     
         # if the database returns None, the username/password combination is an invalid one
-        if check and check_password_hash(check["password"], password):
+        if check and bcrypt.checkpw(password.encode("utf-8"), check[2].encode("utf-8")):
             session["username"] = username
-            return redirect(url_for("user")) 
+            return redirect(url_for("user", user=session.get("username"))) 
         else:
             return render_template("login.html", fail=True) 
     else:
@@ -45,20 +48,27 @@ def signup():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        check = c.execute("SELECT * FROM SAT_USERS WHERE USERNAME = %s", (username,), fetch_one=True)
-
+        c.execute("SELECT 1 FROM sat_users WHERE USERNAME = %s", (username,))
+        check = c.fetchone()
         # if the database returns None, this new user info can be used
 
         if check:
-            return redirect(url_for("signup"))
+            return render_template("signup.html", fail=True)
         else:
-            hashed = generate_password_hash(password, method="bcrypt")
-            c.execute("INSERT INTO SAT_USERS(USERNAME, PASSWORD) VALUES (%s, %s)", (username, hashed))
+            hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+            user_id = str(uuid.uuid4())
+            c.execute("INSERT INTO sat_users(id, USERNAME, PASSWORD) VALUES (%s, %s, %s)", (id, username, hashed))
             session["username"] = username
             return redirect(url_for("user"))
     else:
-        return render_template("signup.html")
-# @labib_corp.route("/user", methods=["GET", "POST"])
+        return render_template("signup.html", fail=False)
+    
+@labib_corp.route("/user", methods=["GET", "POST"])
+def user(): 
+    if session.get("username"):
+        return render_template("user.html", user=session.get("username"))
+
+    
 
 # @labib_corp.route("/problems", methods=["GET", "POST"])
 
@@ -74,7 +84,7 @@ if __name__ == "__main__":
         host = os.getenv("HOST"),
         user = os.getenv("USER"),
         password = os.getenv("PASSWORD"),
-        database = "sat"
+        database = os.getenv("DATABASE")
     )
         # create executable cursor
         c = nafiz_company.cursor()                                          
@@ -85,12 +95,12 @@ if __name__ == "__main__":
             return cursor.fetchone() is not None
         
         # make the problems table if it hasn't been done yet, with relevant columns
-        if not table_exists(c, "SAT_PROBLEMS"):
-            c.execute("CREATE TABLE SAT_PROBLEMS(id INT PRIMARY KEY, PROBLEM BLOB, PROBLEM_TYPE VARCHAR(100), ANSWER_MC VARCHAR(1), ANSWER_WRITE INT, CORRECT_ATTEMPTS INT, TOTAL_ATTEMPTS INT, DIFFICULTY INT)")
+        if not table_exists(c, "sat_problems"):
+            c.execute("CREATE TABLE sat_problems(id VARCHAR(50) PRIMARY KEY, PROBLEM BLOB, PROBLEM_TYPE VARCHAR(100), ANSWER_MC VARCHAR(1), ANSWER_WRITE INT, CORRECT_ATTEMPTS INT, TOTAL_ATTEMPTS INT, DIFFICULTY INT)")
         
         # make the users table if it hasn't been done yet, with relevant columns 
-        if not table_exists(c, "SAT_USERS"):
-            c.execute("CREATE TABLE SAT_USERS(id INT PRIMARY KEY, USERNAME VARCHAR(50), PASSWORD VARCHAR(255), FIRST_NAME VARCHAR(50), LAST_NAME VARCHAR(50))")
+        if not table_exists(c, "sat_users"):
+            c.execute("CREATE TABLE sat_users(id VARCHAR(50) PRIMARY KEY, USERNAME VARCHAR(50), PASSWORD VARCHAR(255), FIRST_NAME VARCHAR(50), LAST_NAME VARCHAR(50))")
 
         # run Flask app
         labib_corp.run(debug=True)                                          

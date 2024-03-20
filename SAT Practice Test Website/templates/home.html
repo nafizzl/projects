@@ -6,17 +6,20 @@
     <link href="../static/output.css" rel="stylesheet">
     <title>Welcome to Labib Corp</title>
 </head>
-<body>
-    <div>
-        <div class="flex items-center">
-            
+<body class="bg-white">
+    <div class="w-screen">
+        <div class="flex items-center sticky top-0 justify-between w-screen">
+            <div class="mx-auto bg-center">
+                <h1 class="font-mono text-4xl text-french-gray mx-auto">SmartQuiz</h1>
+            </div>
+            <div class="flex">
+                <form action="/" method="POST">
+                    <button value="login" name="login" class="transform transition-transform hover:scale-125 hover:-translate-y-1">Login</button>
+                    <button value="signup" name="signup" class="transform transition-transform hover:scale-125 hover:-translate-y-1">Signup</button>
+                </form>
+            </div>
         </div>
-        <div>
-            <form action="/" method="POST">
-                <button value="login" name="button">Login</button>
-                <button value="signup" name="button">Signup</button>
-            </form>
-        </div>
+
     </div>
 </body>
 </html>
