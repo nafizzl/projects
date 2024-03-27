@@ -11,9 +11,9 @@ labib_corp = Flask(__name__)
 @labib_corp.route("/", methods=["GET", "POST"])                                                  
 def home():
     if request.method == "POST":
-        if request.form.get("login"):
+        if request.form.get("button") == "login":
             return redirect(url_for("login"))
-        if request.form.get("signup"):
+        if request.form.get("button") == "signup":
             return redirect(url_for("signup"))
     return render_template("home.html")
 
